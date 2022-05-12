@@ -1,0 +1,51 @@
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+--------1.Find all the doctors who have more than 3 admissions today
+select doc_id,count(admission_date)
+from case
+where to_char(admission_date,'dd-mm-yy')=to_char(sysdate,'dd-mm-yy')
+group by doc_id
+having count(admission_date)>=3;
+
+
+-----2.	Find the patient name (first,last) who got admitted today where the doctor is ‘TIM’
+select p.fname||p.lname,admission_date
+from doctor d,patient p,case c
+where d.doc_id=c.doc_id
+and p.pat_id=c.pat_id
+and to_char(admission_date,'dd-mm-yy')=to_char(sysdate,'dd-mm-yy')
+and d.fname='tim';
+
+----3.	Find the Doctors whose phone numbers were not update (phone number is null)
+select fname||lname
+from doctor
+where phone is null;
+
+----4.	Display the doctors whose specialty is same as Doctor ‘TIM’
+select doc_id,fname||lname
+from doctor
+where specialty=(select specialty
+from doctor 
+where fname='tim');
+
+
+-----5.	Display the doctors who don’t have any cases registered this week
+select doc_id
+from case
+where to_char(admission_date,'yy')between to_char(sysdate,'d')and to_char(sysdate,'d')+6;
+
+
+-----6.	Display Doctor Name, Patient Name, Diagnosis for all the admissions which happened on 1st of Jan this year
+select d.fname||d.lname,p.fname||p.lname,diagnosis,count(admission_date)
+from doctor d,patient p, case c
+where d.doc_id=c.doc_id
+and p.pat_id=c.pat_id
+and to_char(admission_date,'yy')=to_char(trunc(sysdate,'yy'))
+group by d.fname||d.lname,p.fname||p.lname,diagnosis;
+
+------7. Display Doctor Name, patient count based on the cases registered in the hospital.
+select d.fname||d.lname,count(pat_id)
+from doctor d,case c
+where d.doc_id=c.doc_id
+group by admission_date,d.fname||d.lname;
