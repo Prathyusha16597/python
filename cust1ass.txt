@@ -1,0 +1,95 @@
+
+1. Write a query to display all the customer names who do not have a phone
+A) select cust_name
+   from customer
+   where phone is null;
+2. Write a query to display all the customers and the number of accounts they hold
+A) select cust_name,count(a_no)
+   from customer c, account a
+   where c.cust_bkey=a.cust_bkey
+   group by cust_name,cust_bkey;
+3. Display the customer who have the highest balance across all account types
+A) select cust_name
+   from  customer c, account a
+   where c.cust_bkey=a.cust_bkey and bal=(select max(bal)
+                                          from account);
+4. Display the customer name who have the highest balance in individual account types
+A) select cust_name
+   from  customer c, account a
+   where c.cust_bkey=a.cust_bkey and (bal,ac_type)=(select max(bal),ac_type
+                                                    from account
+                                                    group by ac_type);
+5. Display the State wise no of accounts opened in the previous year
+A) select state,count(ac_no)
+   from  customer c, account a
+   where c.cust_bkey=a.cust_bkey and tochar(ac_open_date,yy)=tochar(sysdata,yy)
+   group by state
+   
+6. Display the customers who hold more than 2 accounts of the same type
+A) select cust_name
+   from  customer c, account a
+   where c.cust_bkey=a.cust_bkey
+   group by ac_type
+   having count(ac_type)>=2;
+   
+7. Display customer name and transaction type wise transaction amounts. (Consider two types of transactions which are Debit and Credit)
+A) select cust_name,txn_type,fcy_amount||lcy_amount
+   from  customer c, account a txn t
+   where c.cust_bkey=a.cust_bkey and a.a_id=t.a.no
+   group by fcy_amount||lcy_amount
+
+9. Display the customers who has only savings accout.
+A) select city
+   from customer
+   where cust_bkey=(select cust_id
+                    from account
+                    where ac_type="saving"
+                    group by a_a_id
+10. Display the customerwise total deposit amount and total withdraw amount
+    Customer	Deposit_amt	Withdraw_amt
+A) select cust_name,sum(fcy_amount||lcy_amount)
+   from  customer c, account a txn t
+   where c.cust_bkey=a.cust_bkey and a.a_id=t.a.no and act_status="withdeaw"
+
+11. Display the cities that have more number of customers than the city HYD.
+A)  select city
+    from customer
+    where cust_id>=(select count(cust_id)
+                    from customer
+                    where city='hyd'
+12. Display customers who have more number of accounts than customer ‘MIKE’.
+A)  select cust_name
+    from customer
+    where cust_id>=(select count(cust_id)
+                    from customer
+                    where cust_name='mike'
+                    group by act_id
+13. Display the common customers who made transactions in the current and previous month.
+A)  select cust_name,fcy_amount||lcy_amount,amount fl
+    from  customer c, account a txn t
+    where c.cust_bkey=a.cust_bkey and a.a_id=t.a.n and a_id=(select fl from txn  
+                                                             where tochar(txn_date,mm)=tochar(sysdate,mm_yy)
+                                                             intersection
+                                                             (select fl from txn  
+                                                             where tochar(txn_date,mm)=tochar(sysdate,mm_yy)
+ 
+14. Display statewise no of accounts and no of transactions in the current year.
+A)  select state,count(a_id),count(txn_date)
+    from  customer c, account a txn t
+    where c.cust_bkey=a.cust_bkey and a.a_id=t.a.no and tochar(txn_date,mm)=tochar(sysdate,mm_yy)
+    
+15. Display customers who have their email in gmail domain.
+A)  select cust_name
+    from coustomer
+    where email is not null
+16. Display the youngest customer in each city.
+A)  select cust_name,min(age)
+    from customer
+    group by city
+17. Display the account type wise no of customers and no of accounts opened in the current year.
+A)  select ax_type,count(cust_id,count(act_type)
+    from  customer c, account a txn t
+    where c.cust_bkey=a.cust_bkey and a.a_id=t.a.no and tochar(act_open_date,yy)=tochar(sysdata,yy)
+    group by ac_type,act_open_date
+    
+
