@@ -1,0 +1,60 @@
+1. Display the Publisher city,state
+A)  select p_name,city,state
+    from publisher;
+2. Display the Distributor name Who liven in ban And Name endwith i
+A)  select dist_name
+    from distributer 
+    where city='ban' and dist_name like '%i';
+3. Display  state wise how many store are there
+A)  select count(store_id),state
+    from store
+    group by state;
+4. Display the author name whose wrote 2 books
+A)  select auther_name,count(book_id)
+    from author a,book_auther ba
+    where a.book_id=ba.book_id
+    group by auther_name
+    having count(book_id)=2;
+5. Display authorname older then john
+A)  select author_name
+    from author
+    where month_between(sys_date,dob)/12< select month_between(sys_day,dob)
+                                         from author
+                                         where author_name='josh';
+6. Display the book name quanty is more then 500
+A)  select book_name
+    from b,dis_order do
+    where b.book_id=do.book_id and qty>500;
+7. Display the distributer name whos order this month  and last month
+A)  select dist_name
+    from disributer
+    where dist_id in (select dist_id
+                      from dist_order
+                      where to_char(ord_date,'mm-yy')=to_char(sys_date,'mm-yy')
+             intersection
+                        select dist_id
+                        from dist_order
+                        where to_char(ord_date,'mm-yy')=to_char(sysdate,'mm-yy')-1)
+8. Display the top 2 books in based on mrp
+A)  select book-name
+    from (select ,dense_rank() oraderby(mrp,desc) r
+          from book)
+    where r<=2;
+9. Display book which book is grater then avg mrp in each categary
+A)  select book_name
+    from book b
+    where mrp > (select avg(mrp)
+                 from book b1
+                 where b.categary=b1.categary)
+10) Display the book name and the author name 
+A)  Select book_name, first_name || last_name as author_name
+    from book b,author a,book_author ba
+    where b.book_id = ba.book_id
+    and a.auth_id = ba.auth_id;
+
+
+
+
+
+
+                        
