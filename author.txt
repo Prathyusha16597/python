@@ -1,0 +1,47 @@
+
+1. Identify the relationships between each table.
+A) 1author write may books
+   many author write one book
+   1publisher publish many bokkes
+
+2. Query to get the number of books by each publisher.
+A) select count(book_id),pub_nm
+   from book b publisher p
+   where b.pub_id=p.pub_id
+   group by pub_nm 
+3. Write a query which gives book_name, author_name for publisher ‘XYZ’
+A) select book_nm,au_nm
+   from author a,publisher p,book b, book_author ba
+   where b.pub_id=p.pub_id and a.au_id=ab.au_id and b.book_id=ba.book_id and pub_nm='xyz';
+4. Which book was written by more than 3 authors?
+A) select book_nm
+   from author a, book b, book_author ba
+   a.au_id=ab.au_id and b.book_id=ba.book_id
+   group by book_nm
+   having count(au_id)
+6. Display publisher name, pub_city and metro flag of the city. If city is CHN or MUM or DEL or CAL then display the flag as ‘Y’ otherwise ‘N’
+A) select pub_name,pub_city case when city in('mum','chn','del','cal')= then 'y'
+           else 'n'
+           end 'metro flag'
+   from publisher
+
+7. Display the authors whose age is greater than the author ‘RAM KUMAR’
+A) select au_f_nm||au_l_nm
+   from author
+   where ('sysdate','dob')>(select sysdata_dob
+                            from author
+                            where au_f_nm||au_l_nm='RAM KUMAR');
+8. Display the publisher name, author_name and no of books they wrote.
+A) select pub_nm,au_f_nm||au_l_nm,count(book_id)
+   from author a,publisher p,book b, book_author ba
+   where b.pub_id=p.pub_id and a.au_id=ab.au_id and b.book_id=ba.book_id
+   group by au_f_nm||au_l_nm,pub+nm;
+
+9. Which author wrote the maximum number of books?
+
+A) select * 
+   from au_nm,densr_rank over(order by count(book_id) dese
+   from  author a,publisher p,book b, book_author ba
+   where b.pub_id=p.pub_id and a.au_id=ab.au_id and b.book_id=ba.book_id
+   group by au_nm)
+   where r=1;
